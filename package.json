@@ -1,6 +1,6 @@
 {
   "name": "bocchithebridge",
-  "version": "0.0.2",
+  "version": "1.2.0",
   "description": "a simple Minecraft Bridge bot for Discord.",
   "main": "index.js",
   "scripts": {
