@@ -1,0 +1,16 @@
+{
+  "name": "bocchithebridge",
+  "version": "0.0.1",
+  "description": "a simple Minecraft Bridge bot for Discord.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Thuy2y2c",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.7.1",
+    "dotenv": "^16.0.3",
+    "mineflayer": "^4.8.1"
+  }
+}
