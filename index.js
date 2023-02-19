@@ -1,4 +1,3 @@
-// hey, its cart here. i think i fucked your project!
 require('dotenv').config();
 
 // load mineflayer
@@ -8,7 +7,7 @@ const mineflayer = require('mineflayer');
 const { username, livechat } = require('./config.json');
 
 // load discord.js
-const { Client, GatewayIntentBits } = require('discord.js')
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js')
 const { MessageContent, GuildMessages, Guilds } = GatewayIntentBits
 
 const token = process.env.TOKEN
@@ -39,8 +38,8 @@ const initBot = () => {
     // Setup bot connection
     let bot = mineflayer.createBot(botArgs);
 
-    bot.on('login', () => {
-        console.log(`Logged in as ${bot.username}`);
+    bot.once('login', () => {
+      console.log(`Logged in as ${bot.username}`);
     });
 
     client.on('messageCreate', (message) => {
@@ -48,14 +47,24 @@ const initBot = () => {
         if (message.channel.id !== channel.id) return
         // Ignore messages from the bot itself
         if (message.author.id === client.user.id) return
-        console.log(`${message.author.tag} chatted : ${message.content}`)
-        bot.chat(`${message.author.tag}: ${message.content}`)
-      })
+        const userMessage = message.content;
+        const illegalChar = '§';
+      
+        if (userMessage.includes(illegalChar)) {
+          message.reply('yo bro that unicode doesnt exist on the craft');
+        } else {
+          console.log(`${message.author.tag} chatted : ${userMessage}`);
+          bot.chat(`[${message.author.tag}] ${userMessage} | bocchithebridge`);
+        }
+      });
 
     // Redirect in-game messages to Discord channel
     bot.on('message', (message) => {
         console.log(message.toString())
-        channel.send(message.toString())
+        const chatEmbed = new EmbedBuilder()
+          .setColor("NotQuiteBlack")
+          .setTitle(message.toString())
+        channel.send({ embeds: [chatEmbed]});
       })  
 
     bot.on('end', () => {
