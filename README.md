@@ -1,3 +1,7 @@
+<p align="center">
+    <img src="https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png" style="width: 100%">
+</p>
+
 # bocchithebridge
 a simple Minecraft Bridge bot for Discord using Discord.js and Mineflayer
 
