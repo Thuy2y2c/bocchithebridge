@@ -49,6 +49,7 @@ let channel;
   })
 
 // discword uwu
+ // i am bad at making handlers so i put it here temporary :)
   client.on('messageCreate', message => {
     if (channel) {
     const dchelpEmbed = new EmbedBuilder()
