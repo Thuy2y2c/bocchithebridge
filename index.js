@@ -21,7 +21,7 @@ client.login(token)
 
 const botArgs = {
     host: 'localhost',
-    port: '52996',
+    port: '54601',
     username: username,
     version: '1.12.2'
 };
@@ -47,6 +47,22 @@ let channel;
       process.exit(1)
     }
   })
+
+// checks for prefixes
+  client.once('ready', () => {
+    if (!prefix) {
+      console.log('Ingame prefix not found') 
+    process.exit(1)
+    }
+  }
+)         // hey, its john here. i think i fixed it!
+  client.once('ready', () => {
+    if (!discordprefix) {
+    console.log('Discord prefix not found')  
+  process.exit(1)
+  }
+})
+
 
 // discword uwu
  // i am bad at making handlers so i put it here temporary :)
