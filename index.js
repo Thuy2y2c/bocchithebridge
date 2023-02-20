@@ -1,3 +1,6 @@
+// hey is thuy here, the code is currently messy and packed up with embeds and stuffs, don't worry i will add a handler so
+// the code will be easier to look with and your eyes won't gonna explode. Thanks!
+
 require('dotenv').config();
 
 // load mineflayer
@@ -21,7 +24,7 @@ client.login(token)
 
 const botArgs = {
     host: 'localhost',
-    port: '54601',
+    port: '59221',
     username: username,
     version: '1.12.2'
 };
@@ -30,10 +33,21 @@ console.log(` `+
     `\n Thank you for using Thuy2y2c/bocchithebridge project` +
     `\n         Version: ${require('./package.json').version}` + // Thanks OggyTheCode for this feature
     `\n         Ingame prefix: ${prefix}` +
+    `\n         Discord prefix: ${discordprefix}` +
     `\n         Server: ${botArgs.host}:${botArgs.port}` +
     `\n         Bot username: ${username}` +
     `\n `
 );
+
+// checks for prefixes
+  if (!prefix) {
+    console.log('Ingame prefix not found') 
+  process.exit(1)
+  }
+  if (!discordprefix) {
+  console.log('Discord prefix not found')  
+process.exit(1)
+}
 
 // define the channel variable outside the event handler
 let channel;
@@ -47,22 +61,6 @@ let channel;
       process.exit(1)
     }
   })
-
-// checks for prefixes
-  client.once('ready', () => {
-    if (!prefix) {
-      console.log('Ingame prefix not found') 
-    process.exit(1)
-    }
-  }
-)         // hey, its john here. i think i fixed it!
-  client.once('ready', () => {
-    if (!discordprefix) {
-    console.log('Discord prefix not found')  
-  process.exit(1)
-  }
-})
-
 
 // discword uwu
  // i am bad at making handlers so i put it here temporary :)
