@@ -1,4 +1,6 @@
 {
-    "username": "your-bot-name-here",
-    "livechat": "your-channel-id-here"
+    "username": "bocchithebot",
+    "livechat": "1076402888307388436",
+    "prefix": "",
+    "discordprefix": "!"
 }
