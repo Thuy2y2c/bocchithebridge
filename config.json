@@ -1,4 +1,6 @@
 {
-    "username": "your-bot-name-here",
-    "livechat": "your-channel-id-here"
+    "username": "your bot name",
+    "livechat": "your channel id",
+    "prefix": "",
+    "discordprefix": ""
 }
