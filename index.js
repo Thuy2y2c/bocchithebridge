@@ -23,8 +23,8 @@ const client = new Client({ intents: [Guilds, GuildMessages, MessageContent] })
 client.login(token)
 
 const botArgs = {
-    host: 'bocchithebot.aternos.me',
-    port: '60320',
+    host: 'localhost',
+    port: '59221',
     username: username,
     version: '1.12.2'
 };
@@ -72,7 +72,7 @@ let channel;
     .setURL('https://github.com/Thuy2y2c/bocchithebridge')
     .addFields(
       { name: `Ingame commands - [${prefix}]`, value: '```nothing for now. ```' },
-      { name: `Discord commands - [${discordprefix}]`, value: '```help, serverinfo, ingameinfo, discordinfo ```' },
+      { name: `Discord commands - [${discordprefix}]`, value: '```help ```' },
      )
     .setImage('https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png')
     .setTimestamp()
@@ -110,9 +110,6 @@ const initBot = () => {
         channel.send({ embeds: [spawnEmbed] });
     }
   })
-
-// Discord commands sit here (a handler soon)
-// Recoding/removing few of them right now ( Will make ingame commands soon while getting handlers on working)
 
     client.on('messageCreate', (message) => {
         // Only handle messages in specified channel
