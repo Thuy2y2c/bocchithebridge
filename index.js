@@ -112,78 +112,7 @@ const initBot = () => {
   })
 
 // Discord commands sit here (a handler soon)
-client.on('messageCreate', async message => {
-  if (message.author === client.user) {
-    return;
-  }
-  if (channel) {
-    const serverinfoEmbed = new EmbedBuilder()
-      .setColor("Aqua")
-      .setTitle('bocchithebridge - serverinfo')
-      .setURL('https://github.com/Thuy2y2c/bocchithebridge')
-      .setDescription(`Gives you information about the server "${botArgs.host}:${botArgs.port}"`)
-      .addFields(
-        { name: `Server address `, value: `\`\`\`${botArgs.host}:${botArgs.port}\`\`\`` },
-        { name: `Active players - `, value: `\`\`\`${Object.values(bot.players).map(player => player.username).length} players\`\`\`` },
-        { name: `Server current TPS (If bot isn't in the server, TPS will be 0) `, value: `\`\`\`${bot.getTps()} TPS\`\`\`` },
-      );
-
-    // Check if the server is hosted locally
-    if (botArgs.host === 'localhost') {
-      serverinfoEmbed.addFields(
-        { name: `Warning! `, value: `\`\`\`Server is hosted locally\`\`\`` }
-      );
-      serverinfoEmbed.setImage('https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png');
-      message.reply({ embeds: [serverinfoEmbed] });
-      return;
-    }
-
-    try {
-      const response = await fetch(`https://api.mcsrvstat.us/2/${botArgs.host}:${botArgs.port}`);
-      if (!response.ok) {
-        message.reply(`An error occurred while fetching server information for ${botArgs.host}:${botArgs.port}. (is offline/does not exist?)`);
-        return;
-      }
-      const serverData = await response.json();
-      serverinfoEmbed.addFields(
-        { name: `Server Version `, value: `\`\`\`${serverData.version}\`\`\`` },
-      );
-      serverinfoEmbed.setImage(`http://status.mclive.eu/thuy/${botArgs.host}/${botArgs.port}/banner.png`);
-      message.reply({ embeds: [serverinfoEmbed] });
-    } catch (error) {
-      console.error(error);
-      message.reply(`An error occurred while fetching server information for ${botArgs.host}:${botArgs.port}. (is offline/does not exist?)`);
-    }
-  }
-});
-/* (Why is this seperated from this below one?) My brain can't process enough where to put the server checks in serverinfoEmbed without
-it messing with discordinfoEmbed*/
-  client.on('messageCreate', message => {
-    if (message.author === client.user) {
-      return;
-    }
-    if (channel) {
-      const discordinfoEmbed = new EmbedBuilder()
-        .setColor("Aqua")
-        .setTitle('bocchithebridge - discordinfo')
-        .setURL('https://github.com/Thuy2y2c/bocchithebridge')
-        .setDescription(`Gives you information about your Discord bot`)
-        .addFields(
-          { name: `DiscordTag - `, value: `\`\`\`${client.user.tag}\`\`\`` },
-          { name: `Bridge Channel - `, value: `${channel} - ${livechat}` },
-          { name: `Latency & API Ping(ms) - `, value: `\`\`\`Latency is ${Date.now() - message.createdTimestamp}ms. API Latency is ${Math.round(client.ws.ping)}ms\`\`\`` },
-         )
-        .setImage('https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png')
-        .setTimestamp()
-        .setFooter({ text: 'bocchithebridge'});
-
-      if (message.content.startsWith(discordprefix)) {
-        if (message.content.toLowerCase().includes('discordinfo')) {
-          message.reply({ embeds: [discordinfoEmbed] });
-        }
-      }
-    }
-  });
+// Recoding/removing few of them right now ( Will make ingame commands soon while getting handlers on working)
 
     client.on('messageCreate', (message) => {
         // Only handle messages in specified channel
