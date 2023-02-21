@@ -1,7 +1,8 @@
-// hey is thuy here, the code is currently messy and packed up with embeds and stuffs, don't worry i will add a handler so
+// hey is thuy here, the code is currently messy and packed up with embeds and stuffs, don't worry i will add a handler, eventhandler so
 // the code will be easier to look with and your eyes won't gonna explode. Thanks!
 
 require('dotenv').config();
+const fs = require('fs');
 
 // load mineflayer
 const mineflayer = require('mineflayer');
@@ -10,7 +11,7 @@ const mineflayer = require('mineflayer');
 const { username, livechat, prefix, discordprefix } = require('./config.json');
 
 // load discord.js
-const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js')
+const { Client, GatewayIntentBits, EmbedBuilder, Collection } = require('discord.js')
 const { MessageContent, GuildMessages, Guilds } = GatewayIntentBits
 
 // load plugins for Mineflayer
@@ -20,11 +21,18 @@ const token = process.env.TOKEN
 
 // create new discord client that can see what servers the bot is in, as well as the messages in those servers
 const client = new Client({ intents: [Guilds, GuildMessages, MessageContent] })
-client.login(token)
+client.commands = new Collection();
+
+const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+  const command = require(`./commands/${file}`);
+  client.commands.set(command.name, command);
+}
 
 const botArgs = {
     host: 'localhost',
-    port: '59221',
+    port: '63398',
     username: username,
     version: '1.12.2'
 };
@@ -63,25 +71,20 @@ let channel;
   })
 
 // discword uwu
- // i am bad at making handlers so i put it here temporary :)
-  client.on('messageCreate', message => {
-    if (channel) {
-    const dchelpEmbed = new EmbedBuilder()
-    .setColor("Aqua")
-    .setTitle('bocchithebridge - help')
-    .setURL('https://github.com/Thuy2y2c/bocchithebridge')
-    .addFields(
-      { name: `Ingame commands - [${prefix}]`, value: '```nothing for now. ```' },
-      { name: `Discord commands - [${discordprefix}]`, value: '```help ```' },
-     )
-    .setImage('https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png')
-    .setTimestamp()
-    .setFooter({ text: 'bocchithebridge'});
-    if (message.content.startsWith(discordprefix) && message.content.toLowerCase().includes('help')) {
-      message.reply({ embeds: [dchelpEmbed] });
-      }
-    }
-  });
+client.on('messageCreate', message => {
+  if (!message.content.startsWith(discordprefix) || message.author.bot) return;
+  const args = message.content.slice(discordprefix.length).trim().split(/ +/);
+  const commandName = args.shift().toLowerCase();
+  if (!client.commands.has(commandName)) return;
+  const command = client.commands.get(commandName);
+  try {
+    command.execute(message, args);
+  } catch (error) {
+    console.error(error);
+    message.reply('there was an error trying to execute that command!');
+  }
+});
+
 
 const initBot = () => {
 
@@ -131,7 +134,7 @@ const initBot = () => {
     bot.on('message', (message) => {
         console.log(message.toString())
         const chatEmbed = new EmbedBuilder()
-          .setColor("NotQuiteBlack")
+          .setColor("Random")
           .setTitle(message.toString())
         channel.send({ embeds: [chatEmbed]});
       })  
@@ -166,3 +169,4 @@ const initBot = () => {
 };
 
 initBot();
+client.login(token)
