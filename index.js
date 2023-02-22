@@ -2,7 +2,6 @@
 // the code will be easier to look with and your eyes won't gonna explode. Thanks!
 
 require('dotenv').config();
-const fs = require('fs');
 
 // load mineflayer
 const mineflayer = require('mineflayer');
@@ -11,7 +10,7 @@ const mineflayer = require('mineflayer');
 const { username, livechat, prefix, discordprefix } = require('./config.json');
 
 // load discord.js
-const { Client, GatewayIntentBits, EmbedBuilder, Collection } = require('discord.js')
+const { Client, GatewayIntentBits, EmbedBuilder } = require('discord.js')
 const { MessageContent, GuildMessages, Guilds } = GatewayIntentBits
 
 // load plugins for Mineflayer
@@ -21,26 +20,11 @@ const token = process.env.TOKEN
 
 // create new discord client that can see what servers the bot is in, as well as the messages in those servers
 const client = new Client({ intents: [Guilds, GuildMessages, MessageContent] })
-client.commands = new Collection();
-
-const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-
-for (const file of commandFiles) {
-  const command = require(`./commands/${file}`);
-  client.commands.set(command.name, command);
-}
-
-function listCommandNames() { // read the files in a directory and extract their names, example : "help, botinfo, ping"
-  const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
-  const commandNames = commandFiles.map(file => file.slice(0, -3));
-  return commandNames.join(', ');
-}
-
-const commandNames = listCommandNames();
+client.login(token)
 
 const botArgs = {
     host: 'localhost',
-    port: '61846',
+    port: '59221',
     username: username,
     version: '1.12.2'
 };
@@ -69,33 +53,35 @@ process.exit(1)
 let channel;
 
 // when discord client is ready, send login message
-client.once('ready', (c) => {
-  console.log(`Discord bot logged in as ${c.user.tag}`)
-  channel = client.channels.cache.get(livechat)
-  if (!channel) {
-    console.log('Channel not found')
-  process.exit(1)
-}
-})
+    client.once('ready', (c) => {
+      console.log(`Discord bot logged in as ${c.user.tag}`)
+      channel = client.channels.cache.get(livechat)
+      if (!channel) {
+        console.log('Channel not found')
+      process.exit(1)
+    }
+  })
 
 // discword uwu
-client.on('messageCreate', message => {
-  if (!message.content.startsWith(discordprefix) || message.author.bot) return;
-  const args = message.content.slice(discordprefix.length).trim().split(/ +/);
-  const commandName = args.shift().toLowerCase();
-  if (!client.commands.has(commandName)) return;
-  const command = client.commands.get(commandName);
-  try {
-    if (commandName === 'help') {
-      command.execute(message, prefix, discordprefix, commandNames); // passes prefix and discordprefix to help.js
-    } else {
-      command.execute(message, args);
+ // i am bad at making handlers so i put it here temporary :)
+  client.on('messageCreate', message => {
+    if (channel) {
+    const dchelpEmbed = new EmbedBuilder()
+    .setColor("Aqua")
+    .setTitle('bocchithebridge - help')
+    .setURL('https://github.com/Thuy2y2c/bocchithebridge')
+    .addFields(
+      { name: `Ingame commands - [${prefix}]`, value: '```nothing for now. ```' },
+      { name: `Discord commands - [${discordprefix}]`, value: '```help ```' },
+     )
+    .setImage('https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png')
+    .setTimestamp()
+    .setFooter({ text: 'bocchithebridge'});
+    if (message.content.startsWith(discordprefix) && message.content.toLowerCase().includes('help')) {
+      message.reply({ embeds: [dchelpEmbed] });
+      }
     }
-  } catch (error) {
-    console.error(error);
-    message.reply('there was an error trying to execute that command!');
-  }
-});
+  });
 
 const initBot = () => {
 
@@ -145,7 +131,7 @@ const initBot = () => {
     bot.on('message', (message) => {
         console.log(message.toString())
         const chatEmbed = new EmbedBuilder()
-          .setColor("Random")
+          .setColor("NotQuiteBlack")
           .setTitle(message.toString())
         channel.send({ embeds: [chatEmbed]});
       })  
@@ -180,4 +166,3 @@ const initBot = () => {
 };
 
 initBot();
-client.login(token)
