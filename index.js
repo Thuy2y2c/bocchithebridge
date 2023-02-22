@@ -1,4 +1,4 @@
-// hey is thuy here, the code is currently messy and packed up with embeds and stuffs, don't worry i will add a handler, eventhandler so
+// hey is thuy here, the code is currently messy and packed up with embeds and stuffs, don't worry i will add a handler so
 // the code will be easier to look with and your eyes won't gonna explode. Thanks!
 
 require('dotenv').config();
@@ -30,9 +30,17 @@ for (const file of commandFiles) {
   client.commands.set(command.name, command);
 }
 
+function listCommandNames() { // read the files in a directory and extract their names, example : "help, botinfo, ping"
+  const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('.js'));
+  const commandNames = commandFiles.map(file => file.slice(0, -3));
+  return commandNames.join(', ');
+}
+
+const commandNames = listCommandNames();
+
 const botArgs = {
     host: 'localhost',
-    port: '63398',
+    port: '61846',
     username: username,
     version: '1.12.2'
 };
@@ -61,14 +69,14 @@ process.exit(1)
 let channel;
 
 // when discord client is ready, send login message
-    client.once('ready', (c) => {
-      console.log(`Discord bot logged in as ${c.user.tag}`)
-      channel = client.channels.cache.get(livechat)
-      if (!channel) {
-        console.log('Channel not found')
-      process.exit(1)
-    }
-  })
+client.once('ready', (c) => {
+  console.log(`Discord bot logged in as ${c.user.tag}`)
+  channel = client.channels.cache.get(livechat)
+  if (!channel) {
+    console.log('Channel not found')
+  process.exit(1)
+}
+})
 
 // discword uwu
 client.on('messageCreate', message => {
@@ -78,13 +86,16 @@ client.on('messageCreate', message => {
   if (!client.commands.has(commandName)) return;
   const command = client.commands.get(commandName);
   try {
-    command.execute(message, args);
+    if (commandName === 'help') {
+      command.execute(message, prefix, discordprefix, commandNames); // passes prefix and discordprefix to help.js
+    } else {
+      command.execute(message, args);
+    }
   } catch (error) {
     console.error(error);
     message.reply('there was an error trying to execute that command!');
   }
 });
-
 
 const initBot = () => {
 
