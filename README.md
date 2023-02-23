@@ -11,7 +11,16 @@ a simple Minecraft Bridge bot for Discord using Discord.js and Mineflayer
 make a Discord bridge version of the bot with a slightly recode on it.
 
 ## Setup
-- The repo is not finished or on a stable version. Sorry.
+- Download the current .zip release in the Release tab.
+- Once downloaded, extract the .zip and there will be a folder
+- Check that your computer has already installed Node.js yet
+- Once checked that Node.js is installed, open the folder using Visual Studio Code (recommended)
+- Rename env.example into .env and enter your Discord (bot) Token into it.
+- Go to the config.json, configure it by adding your bot name, channel id, prefix and Discord prefix
+- Then go to index.js and replace the current default server config with the server you desired. (There's no auto-auth lol)
+- Once everything is all configured, go to the terminal and run npm i to install the required packages
+- Once you installed all the packages. Check if theres something wrong with your configuration and then run
+`node .` and the bot should work!
 
 ### How can i contribute?
 - I don't know lol :)
