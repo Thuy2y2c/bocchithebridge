@@ -3,6 +3,9 @@
 
 require('dotenv').config();
 
+const fs = require('fs');
+const path = require('path');
+
 // load mineflayer
 const mineflayer = require('mineflayer');
 
@@ -24,7 +27,7 @@ client.login(token)
 
 const botArgs = {
     host: 'localhost',
-    port: '59221',
+    port: '50632',
     username: username,
     version: '1.12.2'
 };
@@ -52,38 +55,31 @@ process.exit(1)
 // define the channel variable outside the event handler
 let channel;
 
-// when discord client is ready, send login message
-    client.once('ready', (c) => {
-      console.log(`Discord bot logged in as ${c.user.tag}`)
-      channel = client.channels.cache.get(livechat)
-      if (!channel) {
-        console.log('Channel not found')
-      process.exit(1)
-    }
-  })
+/* when discord client is ready, start initBot
+   this should prevent "Cannot read properties of undefined (reading 'send')" is
+   
+   Why?
+   I saw that when Discord.js hasn't finished login into the Discord token when the bot receives 
+   in-game chat messages right before Discord.js finished login-ed into the bot, 'send' isn't defined yet so it just bugs out!
+   
+   grammar is bad*/
+   const discordReady = () => {
+    return new Promise((resolve) => {
+      client.once('ready', (c) => {
+        console.log(`Discord bot logged in as ${c.user.tag}, starting Mineflayer..`);
+        channel = client.channels.cache.get(livechat);
+        if (!channel) {
+          console.log('Channel not found');
+          process.exit(1);
+        }
+        resolve();
+      });
+    });
+  };
 
-// discword uwu
- // i am bad at making handlers so i put it here temporary :)
-  client.on('messageCreate', message => {
-    if (channel) {
-    const dchelpEmbed = new EmbedBuilder()
-    .setColor("Aqua")
-    .setTitle('bocchithebridge - help')
-    .setURL('https://github.com/Thuy2y2c/bocchithebridge')
-    .addFields(
-      { name: `Ingame commands - [${prefix}]`, value: '```nothing for now. ```' },
-      { name: `Discord commands - [${discordprefix}]`, value: '```help ```' },
-     )
-    .setImage('https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png')
-    .setTimestamp()
-    .setFooter({ text: 'bocchithebridge'});
-    if (message.content.startsWith(discordprefix) && message.content.toLowerCase().includes('help')) {
-      message.reply({ embeds: [dchelpEmbed] });
-      }
-    }
-  });
-
-const initBot = () => {
+const initBot = async () => {
+    // Wait for Discord.js to log into the Discord Token
+    await discordReady();
 
     // Setup bot connection
     let bot = mineflayer.createBot(botArgs);
@@ -111,6 +107,37 @@ const initBot = () => {
     }
   })
 
+  // Define the commands folder path
+const commandsFolder = path.join(__dirname, 'ingame-commands');
+
+const commandFiles = fs.readdirSync('./ingame-commands'); // !! lol !!
+const commandNames = commandFiles.map(file => file.replace('.js', '')); // create an array of file names without the file extension
+const commandString = commandNames.join(', '); // join the array elements into a comma-separated string, example : test, help, thuy
+
+// Listen for chat messages
+bot.on('chat', (username, message) => {
+    if (username === bot.username) return;
+    
+  // Check if the message starts with '!'
+  if (message.startsWith(prefix)) {
+    // Split the message into command and arguments
+    const [command, ...args] = message.slice(1).split(' ');
+
+    // Get the path of the command file
+    const commandPath = path.join(commandsFolder, `${command}.js`);
+
+    // Check if the command file exists
+    if (fs.existsSync(commandPath)) {
+      // Require the command file and execute the command function with the bot instance and arguments
+      const commandFunction = require(commandPath);
+      commandFunction(bot, commandString,...args);
+    } else {
+      // If the command file doesn't exist, reply with an error message
+      bot.chat(`Unknown command: ${command}`);
+    }
+  }
+});
+
     client.on('messageCreate', (message) => {
         // Only handle messages in specified channel
         if (message.channel.id !== channel.id) return
@@ -131,7 +158,7 @@ const initBot = () => {
     bot.on('message', (message) => {
         console.log(message.toString())
         const chatEmbed = new EmbedBuilder()
-          .setColor("NotQuiteBlack")
+          .setColor("Random")
           .setTitle(message.toString())
         channel.send({ embeds: [chatEmbed]});
       })  
