@@ -3,13 +3,13 @@
     <img src="https://cdn.discordapp.com/attachments/1076402888307388436/1076857213982888056/ok.png" style="width: 100%">
 </p>
 
-# A Mineflayer bot made mainly for shitposting
+## A Mineflayer bot made mainly for shitposting
 
 bocchithebridge is a Discord Bridge between Minecraft and Discord chats.
 
 [[***bocchithebridge discord server***]](https://discord.gg/24bEdQBzHg)
 
-## Infomation about the repo.
+### Infomation about the repo.
 - This is a updated version of bocchithebot, lets you chat with people on Discord while you're playing Minecraft.
 - (Why is this seperated from bocchithebot?) : Because bocchithebot is a console-only Mineflayer bot, people asked me to
 make a Discord bridge version of the bot with a slightly recode on it.
